@@ -1,16 +1,17 @@
 "use client"
 
-import Link from "next/link";
+import { app } from "../../../firebaseConfig"
+import { auth } from "../../../firebaseConfig"; 
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { useToast } from "../../components/toasts/ToastProvider"
-import router from "next/router";
+import { useRouter } from "next/navigation"
+import Link from "next/link";
 
 export default function Signup() {
-  
-  const auth = getAuth();
-
   const { showToast } = useToast()
+
+  const router = useRouter()
   
   const [userData, setUserData] = useState({
     name: "",
@@ -21,58 +22,57 @@ export default function Signup() {
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, userData.email, userData.password)
-    .then((res) => {
-      const user =res.user
+      .then((res) => {
+        const user = res.user;
 
-      updateProfile(user, {
-        displayName: userData.name, 
-        photoURL: "../../../public/pfp.jpg"
-      })
-        .then(() => {
-          sendEmailVerification(user)
-            .then(() => {
-              showToast("Signed up successfully. Please verify your email", "success")
-              setTimeout(() => {              
+        updateProfile(user, {
+          displayName: userData.name,
+          photoURL: "../../../public/pfp.jpeg",
+        })
+          .then(() => {
+            sendEmailVerification(user).then(() => {
+              showToast(
+                "You're all set! 💌 We sent a verification email. Don’t forget to check spam too!",
+                "success"
+              );
+              setTimeout(() => {
                 router.push("/login");
-              }, 1500);
+              }, 2000);
             });
-        }).catch((error) => {
-          
-        });
-    })
-    .catch((error) => {
-      console.log(error.code)
-      console.log(error.message)
-      if (error.code === "auth/missing-email") {
-        showToast("Email is required", "error")
-      }
-      if (error.code === "auth/weak-password") {
-        showToast("Password should be at least 6 characters", "error")
-      }
-      if (error.code === "auth/invalid-email") {
-        showToast("Email is invalid. Please enter a valid email.", "error")
-      }
-      if (error.code === "auth/email-already-in-use") {
-        showToast("Email has been used before. Please login.", "error")
-      }
-      if (error.code === "auth/missing-password") {
-        showToast("Password is required", "error")
-      }
-    });
-  }
+          })
+          .catch(() => {
+            showToast("Hmm… couldn’t set your profile name. Try again later 😔", "error");
+          });
+      })
+      .catch((error) => {
+        if (error.code === "auth/missing-email") {
+          showToast("Oops! You forgot to enter your email 😅", "error");
+        } else if (error.code === "auth/invalid-email") {
+          showToast("That email doesn't look right. Try a valid one 📧", "error");
+        } else if (error.code === "auth/email-already-in-use") {
+          showToast("Looks like you've already signed up! Try logging in instead 🫣", "error");
+        } else if (error.code === "auth/missing-password") {
+          showToast("Password’s missing! Gotta lock your secrets 🔐", "error");
+        } else if (error.code === "auth/weak-password") {
+          showToast("Password's too weak! At least 6 characters pls 💪", "error");
+        } else {
+          showToast("Something went wrong 😵 Please try again", "error");
+        }
+      });
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-between overflow-hidden">
       {/* Blurry Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center blur-[2px] scale-105"
-        style={{ backgroundImage: "url('/background.png')" }}
+      <div 
+        className="absolute inset-0 bg-cover bg-center blur-[2px] scale-105 bg-blur-image"
       ></div>
 
       {/* Signup Card */}
       <div className="relative z-10 mt-36 bg-[#cc9d9b]/90 backdrop-blur-sm border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] w-[340px] p-6 rounded-sm">
         <h2 className="text-2xl font-bold text-black text-center mb-6">Create Account</h2>
 
-        <form className="flex flex-col gap-4">
+        <form onSubmit={handleSignUp} className="flex flex-col gap-4">
           <input
             type="text"
             placeholder="Name"
@@ -95,7 +95,6 @@ export default function Signup() {
           <button
             type="submit"
             className="cursor-pointer bg-black text-[#e47472] py-2 font-bold mt-2 border-4 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] hover:bg-[#e47472] hover:text-black transition-all duration-200"
-            onClick={handleSignUp}
           >
             Sign Up
           </button>

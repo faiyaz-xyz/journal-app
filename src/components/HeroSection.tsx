@@ -4,7 +4,7 @@ import React from 'react'
 const HeroSection = () => {
   return (
     <main className="flex-grow flex flex-col justify-center items-center text-center px-6">
-    <h2 className="text-6xl font-bold text-black mb-4 select-none font-pixelify">
+    <h2 className="text-6xl font-bold text-black mb-4 font-pixelify">
         Your Cozy Pixel Journal
     </h2>
     <p className="max-w-xl text-2xl text-black mb-8 font-pixelify">

@@ -173,3 +173,16 @@ body {
 .toaster .toast[data-type="error"] {
   background-color: #f87171; /* red-400 */
 }
+
+.bg-image {
+  background-image: url('/background.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-blur-image {
+  background-image: url('/background.png');
+  background-size: cover;
+  background-position: center;
+  filter: blur(2px);
+}
