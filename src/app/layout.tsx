@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ToastProvider } from "../components/toasts/ToastProvider"
 import { StoreProvider } from "@/store/StoreProvider"
+import AuthListener from "@/components/AuthListener"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -17,7 +18,10 @@ export default function RootLayout({
     <StoreProvider>
       <html lang="en">
         <body>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            <AuthListener />
+            {children}
+          </ToastProvider>
         </body>
       </html>
     </StoreProvider>

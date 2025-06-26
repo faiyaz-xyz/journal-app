@@ -1,20 +1,18 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from '@/store/store'
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  user: null,
+};
 
 export const authSlice = createSlice({
-  name: 'auth',
-  // `createSlice` will infer the state type from the `initialState` argument
-  initialState: {
-    user: null,
-  },
+  name: "auth",
+  initialState,
   reducers: {
-    loggedUser: (state, actions) => {
-        state.user = actions.payload
-        localStorage.setItem("userData", JSON.stringify(actions.payload))
-    }
+    loggedUser: (state, action) => {
+      state.user = action.payload;
+    },
   },
-})
+});
 
-export const { loggedUser } = authSlice.actions
-
-export default authSlice.reducer
+export const { loggedUser } = authSlice.actions;
+export default authSlice.reducer;

@@ -23,8 +23,6 @@ export default function Signin() {
     password: "",
   })
 
-  console.log(localStorage.getItem("userData"))
-
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
 
