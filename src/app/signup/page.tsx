@@ -27,7 +27,7 @@ export default function Signup() {
 
         updateProfile(user, {
           displayName: userData.name,
-          photoURL: "../../../public/pfp.jpeg",
+          photoURL: "../../../public/pfp.jpg",
         })
           .then(() => {
             sendEmailVerification(user).then(() => {

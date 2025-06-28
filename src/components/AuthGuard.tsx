@@ -13,11 +13,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!userData && pathname === "/journal") {
-      router.push("/login")
-    } else {
-      setLoading(false)
+      router.push("/login");
     }
-  }, [userData, pathname, router])
+    setLoading(false);
+  }, [userData, pathname, router]);
+
 
   if (loading) return null // or loading spinner
 
